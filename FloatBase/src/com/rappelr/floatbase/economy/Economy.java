@@ -6,7 +6,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import com.rappelr.floatbase.FloatBase;
 import com.rappelr.floatbase.FloatBaseConfigation;
 import com.rappelr.floatbase.economy.source.EconomySource;
-import com.rappelr.floatbase.economy.source.EconomySourceHook;
 import com.rappelr.floatbase.skin.Attribute;
 import com.rappelr.floatbase.skin.Condition;
 import com.rappelr.floatbase.skin.Skin;
@@ -15,11 +14,9 @@ import com.rappelr.floatbase.skin.SkinInstance;
 import lombok.NonNull;
 import lombok.val;
 
-public class Economy implements EconomySourceHook {
+public class Economy implements EconomyHook {
 
-	public static final double NULL_VALUE = -1d;
-
-	private final HashMap<SkinInstance, Double> prices;
+	private final HashMap<SkinInstance, EconomyPricePoint> points;
 
 	private final FloatBase base;
 
@@ -29,7 +26,7 @@ public class Economy implements EconomySourceHook {
 		System.out.println("initializing economy");
 		this.base = base;
 
-		prices = new HashMap<SkinInstance, Double>();
+		points = new HashMap<SkinInstance, EconomyPricePoint>();
 
 	}
 
@@ -40,11 +37,11 @@ public class Economy implements EconomySourceHook {
 
 	public boolean load() {
 		System.out.println("filling economy...");
-		prices.clear();
+		points.clear();
 
-		base.getSkinInstances().forEach(i -> prices.put(i, NULL_VALUE));
+		base.getSkinInstances().forEach(i -> points.put(i, new EconomyPricePoint()));
 
-		System.out.println("economy now contains " + prices.size() + " price points");
+		System.out.println("economy now contains " + points.size() + " price points");
 
 		if(source == null) {
 			System.out.println("no economy source set");
@@ -60,32 +57,60 @@ public class Economy implements EconomySourceHook {
 		return false;
 	}
 
-	public boolean has(SkinInstance instance) {
-		return get(instance) != NULL_VALUE;
+	public boolean hasPrice(SkinInstance instance) {
+		return getPoint(instance).hasPrice();
 	}
 
-	public double get(SkinInstance instance) {
-		return prices.get(instance);
+	public double getPrice(SkinInstance instance) {
+		return getPoint(instance).getPrice();
 	}
 
-	public boolean has(Skin skin, Condition condition, Attribute attribute) {
-		return get(skin, condition, attribute) != NULL_VALUE;
+	public double getVolume(SkinInstance instance) {
+		return getPoint(instance).getVolume();
 	}
 
-	public double get(Skin skin, Condition condition, Attribute attribute) {
-		return get(getInstance(skin, condition, attribute));
+	public double getLowestPrice(SkinInstance instance) {
+		return getPoint(instance).getLowestPrice();
+	}
+
+	public double getMedianPrice(SkinInstance instance) {
+		return getPoint(instance).getMedianPrice();
+	}
+
+	public boolean hasPrice(Skin skin, Condition condition, Attribute attribute) {
+		return getPoint(getInstance(skin, condition, attribute)).hasPrice();
+	}
+
+	public double getPrice(Skin skin, Condition condition, Attribute attribute) {
+		return getPrice(getInstance(skin, condition, attribute));
+	}
+
+	public double getVolume(Skin skin, Condition condition, Attribute attribute) {
+		return getPoint(getInstance(skin, condition, attribute)).getVolume();
+	}
+
+	public double getLowestPrice(Skin skin, Condition condition, Attribute attribute) {
+		return getPoint(getInstance(skin, condition, attribute)).getLowestPrice();
+	}
+
+	public double getMedianPrice(Skin skin, Condition condition, Attribute attribute) {
+		return getPoint(getInstance(skin, condition, attribute)).getMedianPrice();
+	}
+
+	public EconomyPricePoint getPoint(SkinInstance instance) {
+		return points.get(instance);
 	}
 
 	public SkinInstance getInstance(Skin skin, Condition condition, Attribute attribute) {
-		for(SkinInstance i : prices.keySet())
+		for(SkinInstance i : points.keySet())
 			if(i.match(skin, condition, attribute))
 				return i;
 		return null;
 	}
 
 	@Override
-	public void put(SkinInstance instance, double price) {
-		prices.replace(instance, price);
+	public void put(SkinInstance skin, EconomyPricePoint point) {
+		points.replace(skin, point);
 	}
 
 	@Override
@@ -101,18 +126,18 @@ public class Economy implements EconomySourceHook {
 	public void analyze() {
 		AtomicInteger loaded = new AtomicInteger(), found = new AtomicInteger();
 
-		prices.values().stream()
+		points.values().stream()
 		.filter(d -> d != null)
 		.peek(d -> found.incrementAndGet())
-		.filter(d -> d != -1d)
+		.filter(d -> d.hasPrice())
 		.forEach(d -> loaded.incrementAndGet());
 
-		val setPercent = (int) ((100d / prices.size()) * loaded.get());
+		val setPercent = (int) ((100d / points.size()) * loaded.get());
 
 		System.out.println("economy analysis results:");
-		System.out.println("total entries: " + prices.size());
+		System.out.println("total entries: " + points.size());
 		System.out.println("set entries: " + loaded.get() + " ~" + setPercent + "%");
-		System.out.println("null entries: " + (prices.size() - found.get()));
+		System.out.println("null entries: " + (points.size() - found.get()));
 	}
 
 }

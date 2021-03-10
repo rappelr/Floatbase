@@ -1,4 +1,4 @@
-package com.rappelr.floatbase.source;
+package com.rappelr.floatbase.gamesource;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -10,8 +10,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 import com.rappelr.floatbase.FloatBaseConfigation;
-import com.rappelr.floatbase.source.object.SourceObject;
-import com.rappelr.floatbase.source.object.SourceSection;
+import com.rappelr.floatbase.gamesource.object.SourceObject;
+import com.rappelr.floatbase.gamesource.object.SourceSection;
 import com.rappelr.floatbase.utils.StringUtil;
 
 import lombok.AccessLevel;

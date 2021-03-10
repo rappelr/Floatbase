@@ -7,13 +7,13 @@ import java.util.HashMap;
 
 import com.rappelr.floatbase.collection.CollectionType;
 import com.rappelr.floatbase.collection.SkinCollection;
+import com.rappelr.floatbase.gamesource.GameItems;
+import com.rappelr.floatbase.gamesource.Language;
+import com.rappelr.floatbase.gamesource.ProcessedSource;
+import com.rappelr.floatbase.gamesource.object.SourceSection;
 import com.rappelr.floatbase.skin.Rarity;
 import com.rappelr.floatbase.skin.Skin;
 import com.rappelr.floatbase.skin.Weapon;
-import com.rappelr.floatbase.source.GameItems;
-import com.rappelr.floatbase.source.Language;
-import com.rappelr.floatbase.source.ProcessedSource;
-import com.rappelr.floatbase.source.object.SourceSection;
 import com.rappelr.floatbase.utils.StringUtil;
 
 import lombok.val;

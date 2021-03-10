@@ -1,10 +1,10 @@
-package com.rappelr.floatbase.source;
+package com.rappelr.floatbase.gamesource;
 
 import java.io.File;
 import java.util.List;
 
 import com.rappelr.floatbase.FloatBase;
-import com.rappelr.floatbase.source.object.SourceSection;
+import com.rappelr.floatbase.gamesource.object.SourceSection;
 
 public class ProcessedSource extends GameSource {
 	

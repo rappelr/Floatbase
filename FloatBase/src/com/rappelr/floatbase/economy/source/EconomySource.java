@@ -1,5 +1,7 @@
 package com.rappelr.floatbase.economy.source;
 
+import com.rappelr.floatbase.economy.EconomyHook;
+
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,7 +11,7 @@ import lombok.Setter;
 public abstract class EconomySource {
 	
 	@Getter(AccessLevel.PROTECTED) @Setter
-	private EconomySourceHook hook;
+	private EconomyHook hook;
 	
 	public abstract boolean load();
 	

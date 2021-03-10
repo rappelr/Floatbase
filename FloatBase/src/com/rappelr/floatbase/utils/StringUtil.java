@@ -69,6 +69,10 @@ public class StringUtil {
 		return "(" + base + ")";
 	}
 
+	public static String unLign(String base) {
+		return base.substring(1, base.length() - 1);
+	}
+
 	public static String[] toArray(final String... strings) {
 		return strings;
 	}

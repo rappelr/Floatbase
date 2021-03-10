@@ -1,4 +1,4 @@
-package com.rappelr.floatbase.source.object;
+package com.rappelr.floatbase.gamesource.object;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

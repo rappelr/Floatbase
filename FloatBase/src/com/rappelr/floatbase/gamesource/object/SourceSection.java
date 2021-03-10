@@ -1,4 +1,4 @@
-package com.rappelr.floatbase.source.object;
+package com.rappelr.floatbase.gamesource.object;
 
 import java.util.ArrayList;
 import java.util.HashMap;

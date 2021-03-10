@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.rappelr.floatbase.collection.SkinCollection;
-import com.rappelr.floatbase.source.object.SourceSection;
+import com.rappelr.floatbase.gamesource.object.SourceSection;
 import com.rappelr.floatbase.utils.Identifiable;
 import com.rappelr.floatbase.utils.StringUtil;
 

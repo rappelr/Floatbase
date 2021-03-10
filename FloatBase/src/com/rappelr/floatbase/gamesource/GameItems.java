@@ -1,8 +1,8 @@
-package com.rappelr.floatbase.source;
+package com.rappelr.floatbase.gamesource;
 
 import java.util.List;
 
-import com.rappelr.floatbase.source.object.SourceSection;
+import com.rappelr.floatbase.gamesource.object.SourceSection;
 
 public class GameItems extends GameSource {
 	

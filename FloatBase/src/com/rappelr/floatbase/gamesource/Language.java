@@ -1,9 +1,9 @@
-package com.rappelr.floatbase.source;
+package com.rappelr.floatbase.gamesource;
 
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
-import com.rappelr.floatbase.source.object.SourceSection;
+import com.rappelr.floatbase.gamesource.object.SourceSection;
 
 public class Language extends GameSource {
 	

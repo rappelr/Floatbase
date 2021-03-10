@@ -1,73 +1,46 @@
 package com.rappelr.floatbase.economy.source;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
-
 import com.rappelr.floatbase.FloatBaseConfigation;
+import com.rappelr.floatbase.economy.EconomyPricePoint;
 import com.rappelr.floatbase.skin.Attribute;
 import com.rappelr.floatbase.skin.Condition;
 import com.rappelr.floatbase.skin.Weapon;
 
-import lombok.NoArgsConstructor;
 import lombok.val;
 
-@NoArgsConstructor
-public class CSGOFastSource extends EconomySource {
-	
+public class CSGOFastSource extends HTTPSource {
+
 	private static final double PRICE_ADDATIVE = .02d;
 
 	private static final String PAGE_URL = "https://api.csgofast.com/price/all";
-
+	
+	public CSGOFastSource() {
+		super(PAGE_URL);
+	}
+	
 	@Override
-	public boolean load() {
-		if(!checkHook())
-			return false;
-		
-		System.out.println("loading csgofast prices...");
-		BufferedReader in;
-		try {
-			in = new BufferedReader(new InputStreamReader(new URL(PAGE_URL).openStream(), StandardCharsets.UTF_8));
-		} catch (IOException e) {
-			System.out.println("failed to open url " + PAGE_URL);
-			e.printStackTrace();
-			return false;
-		}
-
+	protected boolean process(String content) {
 		int successes = 0;
 		
-		try {
-			val line = in.readLine();
-
-			in.close();
-
-			val split = line.substring(2, line.length() - 1).split(",\"");
-			for(String string : split)
-				try {
-					if(process(string))
-						successes++;
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-
-		} catch (IOException e) {
-			e.printStackTrace();
-			System.out.println("failed after loading " + successes + " prices");
-			return false;
-		}
-
-		System.out.println("loaded " + successes + " prices");
+		val split = content.substring(2, content.length() - 1).split(",\"");
+		for(String line : split)
+			try {
+				if(processLine(line))
+					successes++;
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		
+		System.out.println("CSGOFastSource processed " + successes + " prices successfully");
 		return true;
 	}
 
-	private boolean process(String string) throws Exception {
-		if(!string.contains("|") || string.startsWith("★"))
+	private boolean processLine(String line) throws Exception {
+		if(!line.contains("|") || line.startsWith("★"))
 			return false;
 
-		val price = Double.parseDouble(string.substring(string.lastIndexOf(":") + 1));
-		String item = string.substring(0, string.lastIndexOf(":") - 1);
+		val price = Double.parseDouble(line.substring(line.lastIndexOf(":") + 1));
+		String item = line.substring(0, line.lastIndexOf(":") - 1);
 		boolean special = false;
 
 		if(item.startsWith("StatTrak") || item.startsWith("Souvenir")) {
@@ -98,7 +71,7 @@ public class CSGOFastSource extends EconomySource {
 		if(condition == null)
 			return false;
 
-		getHook().put(getHook().getFloatBase().getEconomy().getInstance(skin, condition, special ? skin.getSpecialAttribute() : Attribute.NORMAL), price + PRICE_ADDATIVE);
+		getHook().put(getHook().getFloatBase().getEconomy().getInstance(skin, condition, special ? skin.getSpecialAttribute() : Attribute.NORMAL), new EconomyPricePoint(price + PRICE_ADDATIVE));
 		return true;
 	}
 }
